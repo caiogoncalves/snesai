@@ -1,5 +1,9 @@
 import torch
+<<<<<<< HEAD
 import torch.nn as nn # Added missing import
+=======
+import torch.nn as nn
+>>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
 import torch.optim as optim
 import numpy as np
 import random
@@ -28,7 +32,11 @@ class DQNAgent:
             epsilon_decay (float): Decay rate for epsilon.
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+<<<<<<< HEAD
         print(f"Using device: {self.device}") # Translated message
+=======
+        print(f"Using device: {self.device}")
+>>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
 
         self.policy_net = DQN(input_shape, num_actions).to(self.device)
         self.target_net = DQN(input_shape, num_actions).to(self.device)

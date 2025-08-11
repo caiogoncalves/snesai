@@ -1,73 +1,63 @@
 # SNES AI
 
-Este projeto utiliza Python para criar agentes de IA que podem jogar jogos de Super Nintendo (SNES), com foco principal em Super Mario World. Ele inclui um agente reativo simples e um agente mais complexo baseado em Deep Q-Learning (DQN).
+This project uses Python to create AI agents that can play Super Nintendo (SNES) games, with a primary focus on Super Mario World. It includes a simple reactive agent and a more complex agent based on Deep Q-Learning (DQN).
 
-## Funcionalidades
+## Features
 
-*   **Agente Reativo**: Um robô simples que usa reconhecimento de template para identificar e reagir a inimigos na tela.
-*   **Agente DQN**: Um agente de aprendizado por reforço que aprende a jogar o jogo através de tentativa e erro, usando uma rede neural profunda para tomar decisões.
-*   **Visualização do Jogo**: Scripts para visualizar o que o agente está "vendo" em tempo real.
-*   **Interação com o Emulador**: Utiliza `pyautogui` para enviar comandos de teclado para o emulador de SNES (RetroArch) e `mss` para capturar a tela.
+*   **Reactive Agent**: A simple bot that uses template matching to identify and react to enemies on the screen.
+*   **DQN Agent**: A reinforcement learning agent that learns to play the game through trial and error, using a deep neural network to make decisions.
+*   **Game Visualization**: Scripts to visualize what the agent is "seeing" in real-time.
+*   **Emulator Interaction**: Uses `pyautogui` to send keyboard commands to the SNES emulator (RetroArch) and `mss` to capture the screen.
 
-## Estrutura do Projeto
+## Project Structure
 
-*   `dqn_executor.py`: O script principal para treinar o agente DQN.
-*   `robo_reativo.py`: O script para executar o agente reativo baseado em template.
-*   `agir_no_jogo.py`: Um script simples para testar a interação com o jogo.
-*   `ver_jogo.py`: Um script para visualizar a tela do jogo que o agente vê.
-*   `inimigo_template.png`: O template de imagem usado pelo agente reativo para detectar inimigos.
-*   `runs/`: Diretório onde os logs do TensorBoard para o treinamento do DQN são salvos.
+*   `run.py`: The main entry point to run the different agents and scripts.
+*   `src/agents/dqn_agent.py`: The main script for training the DQN agent.
+*   `src/agents/reactive_agent.py`: The script to run the template-based reactive agent.
+*   `src/scripts/test_input.py`: A simple script to test game interaction.
+*   `src/scripts/view_game.py`: A script to visualize the game screen as seen by the agent.
+*   `assets/enemy_template.png`: The image template used by the reactive agent to detect enemies.
+*   `runs/`: Directory where TensorBoard logs for DQN training are saved.
 
-## Pré-requisitos
+## Prerequisites
 
 *   Python 3.x
-*   Um emulador de SNES, como o [RetroArch](https://www.retroarch.com/)
-*   O ROM do jogo (por exemplo, Super Mario World)
+*   A SNES emulator, such as [RetroArch](https://www.retroarch.com/)
+*   The game's ROM (e.g., Super Mario World)
 
-## Instalação
+## Installation
 
-1.  Clone o repositório:
+1.  Clone the repository:
     ```bash
-    git clone https://github.com/seu-usuario/snes-ai.git
+    git clone https://github.com/your-username/snes-ai.git
     cd snes-ai
     ```
 
-2.  Instale as dependências:
+2.  Install the dependencies:
     ```bash
     pip install -r requirements.txt
     ```
-    *(Nota: Um arquivo `requirements.txt` precisa ser criado com as bibliotecas necessárias: `torch`, `numpy`, `opencv-python`, `mss`, `pyautogui`, `tensorboard`)*
 
-## Como Usar
+## How to Use
 
-### 1. Configurar o Emulador
+### 1. Configure the Emulator
 
-1.  Abra o RetroArch e carregue o ROM do jogo.
-2.  Certifique-se de que a janela do jogo esteja visível e não minimizada.
-3.  Ajuste as coordenadas da tela no script que você deseja executar (`dqn_executor.py`, `robo_reativo.py`, ou `ver_jogo.py`). As coordenadas estão na variável `bounding_box` ou `SCREEN_POS`.
+1.  Open RetroArch and load the game's ROM.
+2.  Ensure the game window is visible and not minimized.
+3.  Adjust the screen coordinates in the script you want to run. The coordinates are in the `bounding_box` or `SCREEN_POS` variable.
 
-### 2. Executar os Scripts
+### 2. Run the Scripts
 
-*   **Para testar a interação:**
-    ```bash
-    python agir_no_jogo.py
-    ```
+Use the main `run.py` script to choose which component to execute:
+```bash
+python run.py
+```
+You will be prompted to choose one of the following:
+*   Reactive Agent
+*   DQN Agent
+*   View Game Screen
+*   Test Input
 
-*   **Para visualizar a tela do jogo:**
-    ```bash
-    python ver_jogo.py
-    ```
+## Contributing
 
-*   **Para executar o robô reativo:**
-    ```bash
-    python robo_reativo.py
-    ```
-
-*   **Para treinar o agente DQN:**
-    ```bash
-    python dqn_executor.py
-    ```
-
-## Contribuindo
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue ou enviar um pull request.
+Contributions are welcome! Feel free to open an issue or submit a pull request.
