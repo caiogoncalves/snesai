@@ -11,10 +11,10 @@ import time
 bounding_box = {'top': 100, 'left': 100, 'width': 800, 'height': 600}
 
 # 2. Carregue o template do inimigo
-#    Certifique-se que o ficheiro 'inimigo_template.png' está na mesma pasta
-template = cv2.imread('inimigo_template.png', 0)
+#    Certifique-se que o ficheiro 'inimigo_template.png' está na pasta 'assets'
+template = cv2.imread('assets/inimigo_template.png', 0)
 if template is None:
-    raise FileNotFoundError("Não foi possível encontrar 'inimigo_template.png'. Certifique-se que o ficheiro existe.")
+    raise FileNotFoundError("Não foi possível encontrar 'assets/inimigo_template.png'. Certifique-se que o ficheiro existe na pasta 'assets'.")
 
 # Obtém a altura e largura do template para desenhar o retângulo
 w, h = template.shape[::-1]

@@ -1,14 +1,14 @@
 import torch
-import torch.nn as nn
-import torch.optim as optim
 import numpy as np
 import cv2
 from mss import mss
 import pyautogui
 import time
-import random
 from collections import deque
 from torch.utils.tensorboard import SummaryWriter
+
+from dqn_agent_class import DQNAgent
+from dqn_model import DQN
 
 # --- CONFIGURAÇÕES E HIPERPARÂMETROS ---
 
@@ -46,98 +46,19 @@ def process_frame(frame):
     resized = cv2.resize(gray, (84, 84), interpolation=cv2.INTER_AREA)
     return resized.astype(np.uint8)
 
-# --- ARQUITETURA DA REDE NEURAL (CNN) ---
-
-class DQN(nn.Module):
-    def __init__(self, input_shape, num_actions):
-        super(DQN, self).__init__()
-        self.conv = nn.Sequential(
-            nn.Conv2d(input_shape[0], 32, kernel_size=8, stride=4),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=2),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=3, stride=1),
-            nn.ReLU()
-        )
-        conv_out_size = self._get_conv_out(input_shape)
-        self.fc = nn.Sequential(
-            nn.Linear(conv_out_size, 512),
-            nn.ReLU(),
-            nn.Linear(512, num_actions)
-        )
-
-    def _get_conv_out(self, shape):
-        o = self.conv(torch.zeros(1, *shape))
-        return int(np.prod(o.size()))
-
-    def forward(self, x):
-        x = x.float() / 255.0
-        conv_out = self.conv(x).view(x.size()[0], -1)
-        return self.fc(conv_out)
-
-# --- CLASSE DO AGENTE DQN ---
-
-class DQNAgent:
-    def __init__(self, input_shape, num_actions):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-        print(f"A usar o dispositivo: {self.device}")
-        
-        self.policy_net = DQN(input_shape, num_actions).to(self.device)
-        self.target_net = DQN(input_shape, num_actions).to(self.device)
-        self.update_target_network()
-        self.target_net.eval()
-        
-        self.optimizer = optim.Adam(self.policy_net.parameters(), lr=LEARNING_RATE)
-        self.memory = deque(maxlen=MEMORY_SIZE)
-        self.epsilon = EPSILON_START
-        self.num_actions = num_actions
-
-    def update_target_network(self):
-        self.target_net.load_state_dict(self.policy_net.state_dict())
-
-    def remember(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, reward, next_state, done))
-
-    def act(self, state):
-        if random.random() <= self.epsilon:
-            return random.randrange(self.num_actions)
-        
-        state_tensor = torch.tensor(state, dtype=torch.float32, device=self.device).unsqueeze(0)
-        with torch.no_grad():
-            action_values = self.policy_net(state_tensor)
-        return torch.argmax(action_values).item()
-
-    def replay(self, batch_size):
-        if len(self.memory) < batch_size:
-            return None
-        
-        minibatch = random.sample(self.memory, batch_size)
-        states, actions, rewards, next_states, dones = zip(*minibatch)
-        
-        states = torch.tensor(np.array(states), dtype=torch.float32, device=self.device)
-        actions = torch.tensor(actions, dtype=torch.int64, device=self.device).unsqueeze(1)
-        rewards = torch.tensor(rewards, dtype=torch.float32, device=self.device).unsqueeze(1)
-        next_states = torch.tensor(np.array(next_states), dtype=torch.float32, device=self.device)
-        dones = torch.tensor(dones, dtype=torch.float32, device=self.device).unsqueeze(1)
-        
-        current_q_values = self.policy_net(states).gather(1, actions)
-        next_q_values = self.target_net(next_states).max(1)[0].unsqueeze(1)
-        target_q_values = rewards + (1 - dones) * GAMMA * next_q_values
-        
-        loss = nn.MSELoss()(current_q_values, target_q_values)
-        
-        self.optimizer.zero_grad()
-        loss.backward()
-        for param in self.policy_net.parameters():
-            param.grad.data.clamp_(-1, 1)
-        self.optimizer.step()
-        
-        return loss.item()
-
 # --- LOOP PRINCIPAL ---
 
 if __name__ == "__main__":
-    agent = DQNAgent(INPUT_SHAPE, ACTION_SPACE_SIZE)
+    agent = DQNAgent(
+        input_shape=INPUT_SHAPE,
+        num_actions=ACTION_SPACE_SIZE,
+        learning_rate=LEARNING_RATE,
+        gamma=GAMMA,
+        memory_size=MEMORY_SIZE,
+        epsilon_start=EPSILON_START,
+        epsilon_end=EPSILON_END,
+        epsilon_decay=EPSILON_DECAY
+    )
     sct = mss()
     writer = SummaryWriter(f"runs/mario_dqn_{int(time.time())}")
 
@@ -246,9 +167,6 @@ if __name__ == "__main__":
         writer.add_scalar('Training/Average_Loss', avg_loss, episode)
         writer.add_scalar('Training/Epsilon', agent.epsilon, episode)
         
-        if agent.epsilon > EPSILON_END:
-            agent.epsilon *= EPSILON_DECAY
-
         if episode % TARGET_UPDATE_FREQUENCY == 0:
             print(">>> A atualizar a rede alvo...")
             agent.update_target_network()
