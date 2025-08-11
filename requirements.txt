@@ -1,6 +1,6 @@
 torch
 numpy
-cv2
+opencv-python
 mss
 pyautogui
 tensorboard
