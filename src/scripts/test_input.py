@@ -1,16 +1,27 @@
+"""
+A simple script to test input simulation to the RetroArch emulator.
+
+This script simulates pressing the 'z' key (mapped to button A) and the 'right' arrow key
+to check if the emulator is receiving inputs correctly.
+"""
+
 import pyautogui
 import time
 
-print("O script começará em 3 segundos. Clique na janela do RetroArch!")
+# Define the keys to be pressed
+JUMP_KEY = 'z'
+RIGHT_KEY = 'right'
+
+print("The script will start in 3 seconds. Click on the RetroArch window!")
 time.sleep(3)
 
-# Simula o pressionamento da tecla 'z' (que mapeamos para o botão A)
-# Mario deve pular!
-pyautogui.press('z') 
-print("Pressionou 'z' (Botão A). Mario pulou?")
+# Simulate pressing the 'z' key (mapped to button A)
+# Mario should jump!
+pyautogui.press(JUMP_KEY)
+print(f"Pressed '{JUMP_KEY}' (Button A). Did Mario jump?")
 
 time.sleep(1)
 
-# Simula o pressionamento da seta para a direita
-pyautogui.press('right')
-print("Pressionou 'seta para a direita'. Mario andou?")
+# Simulate pressing the right arrow key
+pyautogui.press(RIGHT_KEY)
+print(f"Pressed '{RIGHT_KEY}' (Right Arrow). Did Mario walk?")

@@ -1,26 +1,45 @@
+"""
+A simple script to display the game screen captured from the emulator.
+
+This script continuously captures the screen area defined in `src/config.py`
+and displays it in a window using OpenCV.
+"""
+
 import numpy as np
 import cv2
 from mss import mss
+import os
+import sys
 
-# Substitua com as coordenadas que você encontrou
-# Exemplo: {'top': 100, 'left': 100, 'width': 800, 'height': 600}
-bounding_box = {'top': 100, 'left': 100, 'width': 800, 'height': 600}
+# Add the 'src' directory to the path to import the config module
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from config import BOUNDING_BOX
 
-sct = mss()
 
-print("Pressione 'q' na janela da imagem para sair.")
+def view_game_screen():
+    """
+    Captures and displays the game screen in real-time.
+    """
+    sct = mss()
 
-while True:
-    # Captura a tela na área definida
-    sct_img = sct.grab(bounding_box)
-    
-    # Converte a imagem para um formato que o OpenCV entende
-    img = np.array(sct_img)
-    
-    # Exibe a imagem em uma janela
-    cv2.imshow('Visão do Robô', img)
-    
-    # Espera por 1ms. Se 'q' for pressionado, o loop quebra.
-    if (cv2.waitKey(1) & 0xFF) == ord('q'):
+    print("Press 'q' in the image window to exit.")
+
+    try:
+        while True:
+            # Capture the screen in the defined area
+            sct_img = sct.grab(BOUNDING_BOX)
+            
+            # Convert the image to a format that OpenCV understands
+            img = np.array(sct_img)
+            
+            # Display the image in a window
+            cv2.imshow('Robot Vision', img)
+            
+            # Wait for 1ms. If 'q' is pressed, the loop breaks.
+            if (cv2.waitKey(1) & 0xFF) == ord('q'):
+                break
+    finally:
         cv2.destroyAllWindows()
-        break
+
+if __name__ == "__main__":
+    view_game_screen()
