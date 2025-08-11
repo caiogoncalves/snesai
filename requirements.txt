@@ -1,0 +1,6 @@
+torch
+numpy
+cv2
+mss
+pyautogui
+tensorboard
