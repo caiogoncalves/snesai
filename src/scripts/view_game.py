@@ -2,25 +2,25 @@ import numpy as np
 import cv2
 from mss import mss
 
-# Substitua com as coordenadas que você encontrou
-# Exemplo: {'top': 100, 'left': 100, 'width': 800, 'height': 600}
+# Replace with the coordinates you found
+# Example: {'top': 100, 'left': 100, 'width': 800, 'height': 600}
 bounding_box = {'top': 100, 'left': 100, 'width': 800, 'height': 600}
 
 sct = mss()
 
-print("Pressione 'q' na janela da imagem para sair.")
+print("Press 'q' in the image window to exit.")
 
 while True:
-    # Captura a tela na área definida
+    # Capture the screen in the defined area
     sct_img = sct.grab(bounding_box)
-    
-    # Converte a imagem para um formato que o OpenCV entende
+
+    # Convert the image to a format that OpenCV understands
     img = np.array(sct_img)
-    
-    # Exibe a imagem em uma janela
-    cv2.imshow('Visão do Robô', img)
-    
-    # Espera por 1ms. Se 'q' for pressionado, o loop quebra.
+
+    # Display the image in a window
+    cv2.imshow("Bot's Vision", img)
+
+    # Wait for 1ms. If 'q' is pressed, the loop breaks.
     if (cv2.waitKey(1) & 0xFF) == ord('q'):
         cv2.destroyAllWindows()
         break

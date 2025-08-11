@@ -1,16 +1,16 @@
 import pyautogui
 import time
 
-print("O script começará em 3 segundos. Clique na janela do RetroArch!")
+print("The script will start in 3 seconds. Click on the RetroArch window!")
 time.sleep(3)
 
-# Simula o pressionamento da tecla 'z' (que mapeamos para o botão A)
-# Mario deve pular!
-pyautogui.press('z') 
-print("Pressionou 'z' (Botão A). Mario pulou?")
+# Simulates pressing the 'z' key (which we mapped to the A button)
+# Mario should jump!
+pyautogui.press('z')
+print("Pressed 'z' (A Button). Did Mario jump?")
 
 time.sleep(1)
 
-# Simula o pressionamento da seta para a direita
+# Simulates pressing the right arrow key
 pyautogui.press('right')
-print("Pressionou 'seta para a direita'. Mario andou?")
+print("Pressed 'right arrow'. Did Mario walk?")
