@@ -4,66 +4,66 @@ import pyautogui
 from mss import mss
 import time
 
-# --- CONFIGURAÇÕES ---
+# --- SETTINGS ---
 
-# 1. Defina a área de captura da tela do jogo (top, left, width, height)
-#    Ajuste estes valores para a janela do seu RetroArch
+# 1. Define the screen capture area (top, left, width, height)
+#    Adjust these values for your RetroArch window
 bounding_box = {'top': 100, 'left': 100, 'width': 800, 'height': 600}
 
-# 2. Carregue o template do inimigo
-#    Certifique-se que o ficheiro 'inimigo_template.png' está na pasta 'assets'
-template = cv2.imread('assets/inimigo_template.png', 0)
+# 2. Load the enemy template
+#    Make sure the 'enemy_template.png' file is in the 'assets' folder
+template = cv2.imread('assets/enemy_template.png', 0)
 if template is None:
-    raise FileNotFoundError("Não foi possível encontrar 'assets/inimigo_template.png'. Certifique-se que o ficheiro existe na pasta 'assets'.")
+    raise FileNotFoundError("Could not find 'assets/enemy_template.png'. Make sure the file exists in the 'assets' folder.")
 
-# Obtém a altura e largura do template para desenhar o retângulo
+# Get the width and height of the template to draw the rectangle
 w, h = template.shape[::-1]
 
-# 3. Defina a tecla de pulo
-PULO_TECLA = 'z'  # A tecla que você mapeou para o botão A no RetroArch
+# 3. Define the jump key
+JUMP_KEY = 'z'  # The key you mapped to the A button in RetroArch
 
-# --- LÓGICA DO ROBÔ ---
+# --- BOT LOGIC ---
 
 sct = mss()
 
-print("O robô vai começar em 3 segundos...")
-print("Clique na janela do RetroArch AGORA!")
+print("The bot will start in 3 seconds...")
+print("Click on the RetroArch window NOW!")
 time.sleep(3)
-print("Robô ativo! Pressione 'q' na janela de visualização para parar.")
+print("Bot active! Press 'q' in the view window to stop.")
 
 while True:
-    # Captura a tela do jogo
+    # Capture the game screen
     sct_img = sct.grab(bounding_box)
-    
-    # Converte a imagem para um formato que o OpenCV entende (escala de cinza)
+
+    # Convert the image to a format that OpenCV understands (grayscale)
     frame = np.array(sct_img)
     frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    # Procura pelo template (inimigo) na imagem capturada
-    # O valor 0.8 é o "threshold de confiança". Pode ajustá-lo (0.7-0.95).
+
+    # Search for the template (enemy) in the captured image
+    # The value 0.8 is the "confidence threshold". You can adjust it (0.7-0.95).
     res = cv2.matchTemplate(frame_gray, template, cv2.TM_CCOEFF_NORMED)
     threshold = 0.5
     loc = np.where(res >= threshold)
-    
-    # Verifica se encontrou alguma correspondência
+
+    # Check if any match was found
     if np.any(loc[0]):
-        print("Inimigo detetado! A PULAR!")
-        
-        # Pressiona a tecla de pulo
-        pyautogui.press(PULO_TECLA)
-        
-        # Desenha um retângulo à volta do inimigo detetado na janela de visualização
+        print("Enemy detected! JUMPING!")
+
+        # Press the jump key
+        pyautogui.press(JUMP_KEY)
+
+        # Draw a rectangle around the detected enemy in the view window
         for pt in zip(*loc[::-1]):
             cv2.rectangle(frame, pt, (pt[0] + w, pt[1] + h), (0, 0, 255), 2)
-            break # Desenha apenas no primeiro inimigo encontrado para não poluir
-        
-        # Uma pequena pausa para não pressionar a tecla 60x por segundo
+            break # Draw only on the first enemy found to avoid clutter
+
+        # A short pause to avoid pressing the key 60x per second
         time.sleep(0.1)
 
-    # Mostra a visão do robô (com o retângulo se um inimigo for encontrado)
-    cv2.imshow('Visão do Robô', frame)
+    # Show the bot's vision (with the rectangle if an enemy is found)
+    cv2.imshow("Bot's Vision", frame)
 
-    # Condição para parar o programa
+    # Condition to stop the program
     if (cv2.waitKey(1) & 0xFF) == ord('q'):
         cv2.destroyAllWindows()
         break

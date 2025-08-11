@@ -1,37 +1,37 @@
 import sys
 import os
 
-# Adiciona o diretório 'src' ao path para que possamos importar os módulos
+# Add the 'src' directory to the path so we can import the modules
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 def main():
     """
-    Ponto de entrada principal para executar os diferentes agentes e scripts.
+    Main entry point to run the different agents and scripts.
     """
-    print("Bem-vindo ao SNES AI!")
-    print("Por favor, escolha qual script executar:")
-    print("1. Agente Reativo (Pula de inimigos baseados em template)")
-    print("2. Agente DQN (Treino de aprendizado por reforço profundo)")
-    print("3. Visualizar Tela do Jogo")
-    print("4. Testar Controles de Input")
+    print("Welcome to SNES AI!")
+    print("Please choose which script to run:")
+    print("1. Reactive Agent (Jumps from template-based enemies)")
+    print("2. DQN Agent (Deep reinforcement learning training)")
+    print("3. View Game Screen")
+    print("4. Test Input Controls")
 
-    choice = input("Digite o número da sua escolha: ")
+    choice = input("Enter the number of your choice: ")
 
     if choice == '1':
-        print("\nA executar o Agente Reativo...")
-        # Usamos o import aqui para evitar carregar módulos pesados desnecessariamente
+        print("\nRunning the Reactive Agent...")
+        # We use the import here to avoid loading heavy modules unnecessarily
         from agents import reactive_agent
     elif choice == '2':
-        print("\nA executar o Agente DQN...")
+        print("\nRunning the DQN Agent...")
         from agents import dqn_agent
     elif choice == '3':
-        print("\nA executar a Visualização da Tela...")
+        print("\nRunning the Screen Visualization...")
         from scripts import view_game
     elif choice == '4':
-        print("\nA executar o Teste de Input...")
+        print("\nRunning the Input Test...")
         from scripts import test_input
     else:
-        print("Escolha inválida. Por favor, execute o script novamente e escolha uma das opções.")
+        print("Invalid choice. Please run the script again and choose one of the options.")
 
 if __name__ == "__main__":
     main()

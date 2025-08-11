@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import random
@@ -8,7 +9,7 @@ from .dqn_model import DQN
 class DQNAgent:
     def __init__(self, input_shape, num_actions, learning_rate, gamma, memory_size, epsilon_start, epsilon_end, epsilon_decay):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-        print(f"A usar o dispositivo: {self.device}")
+        print(f"Using device: {self.device}")
 
         self.policy_net = DQN(input_shape, num_actions).to(self.device)
         self.target_net = DQN(input_shape, num_actions).to(self.device)
