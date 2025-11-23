@@ -2,5 +2,8 @@ torch
 numpy
 opencv-python
 mss
+cmake
+pynput
 pyautogui
-tensorboard
+stable-baselines3
+stable-retro

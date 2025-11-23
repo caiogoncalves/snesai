@@ -32,8 +32,6 @@ from config import (
 from dqn_agent_class import DQNAgent
 from dqn_model import DQN
 
-<<<<<<< HEAD
-
 def process_frame(frame):
     """
     Converts a frame to grayscale and resizes it.
@@ -44,48 +42,11 @@ def process_frame(frame):
     Returns:
         numpy.ndarray: The processed frame in grayscale and resized to 84x84.
     """
-=======
-# --- SETTINGS AND HYPERPARAMETERS ---
-
-# UPDATED ACTIONS TO HANDLE RAMPS
-ACTIONS = {
-    0: 'right',             # Walk right
-    1: ['right', 'x'],      # Run right (affects jumps)
-    2: 'z',                 # Jump in place (short jump)
-    3: ['right', 'z'],      # Jump right (normal jump)
-    4: ['right', 'x', 'z'], # Run and jump right (long jump)
-    5: ['up', 'right'],     # Crucial action for climbing ramps!
-}
-ACTION_SPACE_SIZE = len(ACTIONS)
-
-# Screen settings
-SCREEN_POS = {'top': 100, 'left': 100, 'width': 800, 'height': 600} # ADJUST FOR YOUR SCREEN
-FRAME_STACK_SIZE = 4
-INPUT_SHAPE = (FRAME_STACK_SIZE, 84, 84)
-
-# DQN Hyperparameters
-GAMMA = 0.99
-EPSILON_START = 1.0
-EPSILON_END = 0.01
-EPSILON_DECAY = 0.9995
-LEARNING_RATE = 0.00025
-MEMORY_SIZE = 10000
-BATCH_SIZE = 32
-TARGET_UPDATE_FREQUENCY = 10
-
-# --- IMAGE PROCESSING FUNCTION ---
-
-def process_frame(frame):
-    """Converts a frame to grayscale and resizes it."""
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     resized = cv2.resize(gray, (84, 84), interpolation=cv2.INTER_AREA)
     return resized.astype(np.uint8)
 
-<<<<<<< HEAD
-=======
-# --- MAIN LOOP ---
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
+
 
 def run_dqn_training():
     """
@@ -107,13 +68,8 @@ def run_dqn_training():
     try:
         # Attempt to load benchmark images for Q-value analysis
         benchmark_images = {
-<<<<<<< HEAD
-            "Start": process_frame(cv2.imread("benchmark_inicio.png")),
-            "Enemy": process_frame(cv2.imread("benchmark_inimigo.png"))
-=======
             "Start": process_frame(cv2.imread("benchmark_start.png")),
             "Enemy": process_frame(cv2.imread("benchmark_enemy.png"))
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
         }
         print("Benchmark images loaded successfully.")
     except Exception as e:
@@ -141,11 +97,7 @@ def run_dqn_training():
         action_counts = {i: 0 for i in range(ACTION_SPACE_SIZE)}
 
         print(f"\n--- Episode {episode} | Epsilon: {agent.epsilon:.4f} ---")
-<<<<<<< HEAD
         # IMPORTANT: You need to manually reset the game here or automate it
-=======
-        # HERE YOU SHOULD RESET THE GAME MANUALLY OR AUTOMATE IT
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
         time.sleep(2)
 
         done = False
@@ -164,11 +116,7 @@ def run_dqn_training():
             else:
                 pyautogui.press(action_keys)
 
-<<<<<<< HEAD
             # Reward logic (NEEDS IMPROVEMENT)
-=======
-            # Reward logic (STILL NEEDS IMPROVEMENT)
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
             reward = 0.1
             if episode_steps > 500:
                 done = True
@@ -192,17 +140,10 @@ def run_dqn_training():
                 episode_losses.append(loss)
                 writer.add_scalar('Training/Step_Loss', loss, total_steps)
 
-<<<<<<< HEAD
         # End of episode report
         print("\n" + "=" * 30)
         print(f"EPISODE {episode} REPORT")
         print("=" * 30)
-=======
-        # Print end-of-episode report
-        print("\n" + "="*30)
-        print(f"EPISODE {episode} REPORT")
-        print("="*30)
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
         avg_loss = np.mean(episode_losses) if episode_losses else 0
         print(f"  Performance:\n    - Total Reward: {episode_reward:.2f}\n    - Duration: {episode_steps} steps")
         print(f"  Training:\n    - Average Loss: {avg_loss:.5f}")
@@ -213,11 +154,7 @@ def run_dqn_training():
             percentage = (count / total_actions) * 100 if total_actions > 0 else 0
             print(f"    - Action '{action_name}': {count} times ({percentage:.1f}%)")
         if benchmark_images:
-<<<<<<< HEAD
             print(f"  Q-Value Analysis ('Network Confidence'):")
-=======
-            print(f"  Q-Values Analysis (Network 'Confidence'):")
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
             agent.policy_net.eval()
             with torch.no_grad():
                 for name, img in benchmark_images.items():
@@ -240,10 +177,7 @@ def run_dqn_training():
             print(">>> Updating target network...")
             agent.update_target_network()
             torch.save(agent.policy_net.state_dict(), f"dqn_mario_episode_{episode}.pth")
-<<<<<<< HEAD
 
 
 if __name__ == "__main__":
     run_dqn_training()
-=======
->>>>>>> a54129cf58c1ab5fe6d5ef1f3c03ba1870c41dda
